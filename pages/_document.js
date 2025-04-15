@@ -11,8 +11,13 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang={BLOG.LANG}>
-        <Head>
-          <meta name="google-site-verification" content="kZN2CnAvAwcVpA8C9oWqXEyBC-ln-bbktnCbeFQRAvA" />
+        <Head> 
+          {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+          <meta
+            name="google-site-verification"
+            content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}
+          />
+          )}
           {/* 预加载字体 */}
           {BLOG.FONT_AWESOME && (
             <>
