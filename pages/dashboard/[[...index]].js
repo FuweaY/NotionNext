@@ -27,7 +27,7 @@ export async function getStaticProps({ locale }) {
 
   // 在列表内查找文章
   props.post = props?.allPages?.find(p => {
-    return p.type.indexOf('Menu') < 0 && p.slug === fullSlug
+    return p?.type?.indexOf('Menu') < 0 && p.slug === fullSlug
   })
 
   // 处理非列表内文章的内信息
