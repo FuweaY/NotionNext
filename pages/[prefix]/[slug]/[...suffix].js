@@ -58,16 +58,34 @@ export async function getStaticProps({
   const props = await getGlobalData({ from, locale })
 
   // 在列表内查找文章
-  props.post = props?.allPages?.find(p => {
-    if (!p) return false
-    return (
-      p.type?.indexOf('Menu') < 0 &&
-      (p.slug === suffix ||
-        (fullSlug && p.slug === fullSlug.substring(fullSlug.lastIndexOf('/') + 1)) ||
+  if (props?.allPages && Array.isArray(props.allPages)) {
+    props.post = props.allPages.find(p => {
+      if (!p || typeof p !== 'object') return false
+      
+      // 安全檢查 type
+      const hasValidType = p.type && typeof p.type === 'string' && p.type.indexOf('Menu') < 0
+      if (!hasValidType) return false
+      
+      // 安全檢查各種 slug 匹配
+      const suffixStr = Array.isArray(suffix) ? suffix[suffix.length - 1] : suffix
+      const slugMatches = p.slug && (
+        p.slug === suffixStr ||
         p.slug === fullSlug ||
-        (fullSlug && p.id === idToUuid(fullSlug)))
-    )
-  })
+        (fullSlug && fullSlug.lastIndexOf && p.slug === fullSlug.substring(fullSlug.lastIndexOf('/') + 1))
+      )
+      
+      // 安全檢查 id 匹配
+      const idMatches = fullSlug && p.id && (() => {
+        try {
+          return p.id === idToUuid(fullSlug)
+        } catch {
+          return false
+        }
+      })()
+      
+      return slugMatches || idMatches
+    })
+  }
 
   // 处理非列表内文章的内信息
   if (!props?.post) {

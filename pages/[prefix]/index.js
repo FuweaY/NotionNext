@@ -125,13 +125,27 @@ export async function getStaticProps({ params: { prefix }, locale }) {
   }
 
   // 在列表内查找文章
-  props.post = props?.allPages?.find(p => {
-    if (!p) return false
-    return (
-      p.type?.indexOf('Menu') < 0 &&
-      (p.slug === prefix || (prefix && p.id === idToUuid(prefix)))
-    )
-  })
+  if (props?.allPages && Array.isArray(props.allPages)) {
+    props.post = props.allPages.find(p => {
+      if (!p || typeof p !== 'object') return false
+      
+      // 安全檢查 type
+      const hasValidType = p.type && typeof p.type === 'string' && p.type.indexOf('Menu') < 0
+      if (!hasValidType) return false
+      
+      // 安全檢查 slug 和 id
+      const slugMatches = p.slug && p.slug === prefix
+      const idMatches = prefix && p.id && (() => {
+        try {
+          return p.id === idToUuid(prefix)
+        } catch {
+          return false
+        }
+      })()
+      
+      return slugMatches || idMatches
+    })
+  }
 
   // 处理非列表内文章的内信息
   if (!props?.post) {
