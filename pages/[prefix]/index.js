@@ -129,7 +129,7 @@ export async function getStaticProps({ params: { prefix }, locale }) {
     if (!p) return false
     return (
       p.type?.indexOf('Menu') < 0 &&
-      (p.slug === prefix || p.id === idToUuid(prefix))
+      (p.slug === prefix || (prefix && p.id === idToUuid(prefix)))
     )
   })
 

@@ -54,14 +54,14 @@ export async function getStaticProps({ params: { prefix, slug }, locale }) {
     if (!p) return false
     return (
       p.type?.indexOf('Menu') < 0 &&
-      (p.slug === slug || p.slug === fullSlug || p.id === idToUuid(fullSlug))
+      (p.slug === slug || p.slug === fullSlug || (fullSlug && p.id === idToUuid(fullSlug)))
     )
   })
 
   // 处理非列表内文章的内信息
   if (!props?.post) {
-    const pageId = slug.slice(-1)[0]
-    if (pageId.length >= 32) {
+    const pageId = slug?.slice(-1)?.[0]
+    if (pageId && pageId.length >= 32) {
       const post = await getPost(pageId)
       props.post = post
     }

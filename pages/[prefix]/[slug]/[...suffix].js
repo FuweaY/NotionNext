@@ -63,16 +63,16 @@ export async function getStaticProps({
     return (
       p.type?.indexOf('Menu') < 0 &&
       (p.slug === suffix ||
-        p.slug === fullSlug.substring(fullSlug.lastIndexOf('/') + 1) ||
+        (fullSlug && p.slug === fullSlug.substring(fullSlug.lastIndexOf('/') + 1)) ||
         p.slug === fullSlug ||
-        p.id === idToUuid(fullSlug))
+        (fullSlug && p.id === idToUuid(fullSlug)))
     )
   })
 
   // 处理非列表内文章的内信息
   if (!props?.post) {
-    const pageId = fullSlug.slice(-1)[0]
-    if (pageId.length >= 32) {
+    const pageId = fullSlug?.slice(-1)?.[0]
+    if (pageId && pageId.length >= 32) {
       const post = await getPost(pageId)
       props.post = post
     }
