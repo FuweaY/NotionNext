@@ -73,7 +73,7 @@ const Slug = props => {
       return
     }
     // 文章解锁后生成目录与内容
-    if (post?.blockMap?.block) {
+    if (post?.blockMap?.block && post?.id) {
       post.content = Object.keys(post.blockMap.block).filter(
         key => post.blockMap.block[key]?.value?.parent_id === post.id
       )
