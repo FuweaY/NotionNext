@@ -59,8 +59,9 @@ export async function getStaticProps({
 
   // 在列表内查找文章
   props.post = props?.allPages?.find(p => {
+    if (!p) return false
     return (
-      p?.type?.indexOf('Menu') < 0 &&
+      p.type?.indexOf('Menu') < 0 &&
       (p.slug === suffix ||
         p.slug === fullSlug.substring(fullSlug.lastIndexOf('/') + 1) ||
         p.slug === fullSlug ||

@@ -126,8 +126,9 @@ export async function getStaticProps({ params: { prefix }, locale }) {
 
   // 在列表内查找文章
   props.post = props?.allPages?.find(p => {
+    if (!p) return false
     return (
-      p?.type?.indexOf('Menu') < 0 &&
+      p.type?.indexOf('Menu') < 0 &&
       (p.slug === prefix || p.id === idToUuid(prefix))
     )
   })
